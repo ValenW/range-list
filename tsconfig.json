@@ -1,5 +1,4 @@
 {
-  "extends": "ts-node/node16/tsconfig.json",
   "ts-node": {
     "require": ["tsconfig-paths/register"],
     "transpileOnly": true,
@@ -14,6 +13,9 @@
   "compilerOptions": {
     "lib": ["es6", "dom"],
     "target": "es2015",
+    "module": "commonjs",
+    "declaration": true,
+    "outDir": "dist",
     "resolveJsonModule": true,
     "baseUrl": "src",
     "paths": {
@@ -21,5 +23,5 @@
     }
   },
   "exclude": ["node_modules"],
-  "include": ["**/*.ts", "**/*.tsx", "**/*.json", "jest.config.js"]
+  "include": ["src/**/*.ts"]
 }
