@@ -64,35 +64,27 @@ export class RangeList {
     }
 
     const removed: NumberRange[] = [];
-    if (ranges[0].start.n < range.start.n) {
+    if (
+      ranges[0].start.n < range.start.n ||
+      (ranges[0].start.n === range.start.n &&
+        ranges[0].start.include &&
+        !range.start.include)
+    ) {
       removed.push({
         start: ranges[0].start,
         end: { n: range.start.n, include: !range.start.include },
       });
-    } else if (
-      ranges[0].start.n === range.start.n &&
-      ranges[0].start.include &&
-      !range.start.include
-    ) {
-      removed.push({
-        start: { n: range.start.n, include: true },
-        end: { n: range.start.n, include: true },
-      });
     }
 
-    if (ranges[ranges.length - 1].end.n > range.end.n) {
+    if (
+      ranges[ranges.length - 1].end.n > range.end.n ||
+      (ranges[ranges.length - 1].end.n === range.end.n &&
+        ranges[ranges.length - 1].end.include &&
+        !range.end.include)
+    ) {
       removed.push({
         start: { n: range.end.n, include: !range.end.include },
         end: ranges[ranges.length - 1].end,
-      });
-    } else if (
-      ranges[ranges.length - 1].end.n === range.end.n &&
-      ranges[ranges.length - 1].end.include &&
-      !range.end.include
-    ) {
-      removed.push({
-        start: { n: range.end.n, include: true },
-        end: { n: range.end.n, include: true },
       });
     }
     return removed;
@@ -123,6 +115,7 @@ export class RangeList {
   /**
    * Adds a range to the list
    * @param {[number, number]} tuple - Array of two integers that specify beginning and end of range.
+   * Consider as one ponit when start === end
    */
   add(tuple: [number, number]) {
     const range = RangeList.#getRangeFromTuple(tuple);
@@ -137,6 +130,7 @@ export class RangeList {
   /**
    * Removes a range from the list
    * @param {[number, number]} tuple - Array of two integers that specify beginning and end of range.
+   * Consider as one ponit when start === end
    */
   remove(tuple: [number, number]) {
     const range = RangeList.#getRangeFromTuple(tuple);
@@ -149,7 +143,7 @@ export class RangeList {
   }
 
   /**
-   * convert the range list to string display like `[1,2), [3, 4)`
+   * Convert the range list to string display like `[1,2), [3, 4)`
    */
   toString(): string {
     return this.#sortedRanges

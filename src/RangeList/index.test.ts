@@ -47,6 +47,8 @@ describe("range list add method", () => {
     expect(rangeList.toString()).toBe(`[1, 2)`);
     rangeList.add([2, 2]);
     expect(rangeList.toString()).toBe(`[1, 2]`);
+    rangeList.add([3, 3]);
+    expect(rangeList.toString()).toBe(`[1, 2], [3, 3]`);
   });
 });
 
