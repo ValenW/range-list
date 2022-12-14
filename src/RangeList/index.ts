@@ -16,13 +16,12 @@ interface NumberRange {
  */
 export class RangeList {
   #sortedRanges: NumberRange[] = [];
+  #supportPoint: boolean = true;
 
-  static #getRangeFromTuple(tuple: [number, number]): NumberRange {
-    return {
-      start: { n: tuple[0], include: true },
-      end: { n: tuple[1], include: tuple[0] === tuple[1] },
-    };
+  constructor(supportPoint: boolean = true) {
+    this.#supportPoint = supportPoint;
   }
+
   static #isRangeExist(range: NumberRange): boolean {
     return (
       range.start.n < range.end.n ||
@@ -43,6 +42,16 @@ export class RangeList {
   static #getMax(a: RangePoint, b: RangePoint): RangePoint {
     if (a.n !== b.n) return a.n > b.n ? a : b;
     return a.include ? a : b;
+  }
+
+  #getRangeFromTuple(tuple: [number, number]): NumberRange {
+    return {
+      start: { n: tuple[0], include: true },
+      end: {
+        n: tuple[1],
+        include: this.#supportPoint ? tuple[0] === tuple[1] : false,
+      },
+    };
   }
 
   #merge(ranges: NumberRange[], range: NumberRange): NumberRange[] {
@@ -120,10 +129,10 @@ export class RangeList {
   /**
    * Adds a range to the list
    * @param {[number, number]} tuple - Array of two integers that specify beginning and end of range.
-   * Consider as one ponit when start === end
+   * Consider as one point when start === end
    */
   add(tuple: [number, number]) {
-    const range = RangeList.#getRangeFromTuple(tuple);
+    const range = this.#getRangeFromTuple(tuple);
     const [start, end] = this.#getUpdateIndexRange(range);
     this.#sortedRanges.splice(
       start,
@@ -135,10 +144,10 @@ export class RangeList {
   /**
    * Removes a range from the list
    * @param {[number, number]} tuple - Array of two integers that specify beginning and end of range.
-   * Consider as one ponit when start === end
+   * Consider as one point when start === end
    */
   remove(tuple: [number, number]) {
-    const range = RangeList.#getRangeFromTuple(tuple);
+    const range = this.#getRangeFromTuple(tuple);
     const [start, end] = this.#getUpdateIndexRange(range);
     this.#sortedRanges.splice(
       start,

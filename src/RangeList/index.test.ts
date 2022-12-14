@@ -101,3 +101,27 @@ describe("range list remove method", () => {
     expect(rangeList.toString()).toBe(`(1, 2), (2, 5)`);
   });
 });
+
+describe("test no support point", () => {
+  const rangeList = new RangeList(false);
+  rangeList.add([1, 5]);
+  expect(rangeList.toString()).toBe(`[1, 5)`);
+  rangeList.add([10, 20]);
+  expect(rangeList.toString()).toBe(`[1, 5), [10, 20)`);
+  rangeList.add([20, 20]);
+  expect(rangeList.toString()).toBe(`[1, 5), [10, 20)`);
+  rangeList.add([20, 21]);
+  expect(rangeList.toString()).toBe(`[1, 5), [10, 21)`);
+  rangeList.add([2, 4]);
+  expect(rangeList.toString()).toBe(`[1, 5), [10, 21)`);
+  rangeList.add([3, 8]);
+  expect(rangeList.toString()).toBe(`[1, 8), [10, 21)`);
+  rangeList.remove([10, 10]);
+  expect(rangeList.toString()).toBe(`[1, 8), [10, 21)`);
+  rangeList.remove([10, 11]);
+  expect(rangeList.toString()).toBe(`[1, 8), [11, 21)`);
+  rangeList.remove([15, 17]);
+  expect(rangeList.toString()).toBe(`[1, 8), [11, 15), [17, 21)`);
+  rangeList.remove([3, 19]);
+  expect(rangeList.toString()).toBe(`[1, 3), [19, 21)`);
+});
