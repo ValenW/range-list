@@ -9,6 +9,11 @@ interface NumberRange {
   end: RangePoint;
 }
 
+/**
+ * A pair of integers define a range, for example: [1, 5) includes integers: 1, 2, 3, and 4,
+ * and [3, 4] includes 3 and 4
+ * A range list is an aggregate of these ranges like [1, 5), [10, 11), [100, 201)
+ */
 export class RangeList {
   #sortedRanges: NumberRange[] = [];
 
